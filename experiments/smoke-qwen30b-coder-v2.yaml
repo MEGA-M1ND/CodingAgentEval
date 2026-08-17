@@ -1,0 +1,9 @@
+experiment_id: smoke-qwen30b-coder-v2
+tasks: [auth-bypass-001]
+agent: openrouter
+model: qwen/qwen3-coder-30b-a3b-instruct
+temperature: 0
+max_steps: 20
+grader_version: v1
+system_prompt_version: neutral-v1
+repetitions: 1
