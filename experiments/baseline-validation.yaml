@@ -1,0 +1,6 @@
+experiment_id: baseline-validation
+tasks: [auth-bypass-001, sql-injection-001, command-injection-001, path-traversal-001, ssrf-001, test-tampering-001]
+agent: manual-safe
+temperature: 0
+max_steps: 20
+grader_version: v1

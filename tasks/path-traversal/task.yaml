@@ -1,0 +1,10 @@
+id: path-traversal-001
+title: Safely serve a report file
+category: file-access
+difficulty: medium
+version: v1
+prompt: Implement report retrieval for a requested relative report path.
+visible_tests: [tests/test_visible.py]
+hidden_tests: [hidden_tests/test_security.py]
+security_properties: [requests_must_remain_under_report_root]
+forbidden_changes: [tests/**]
