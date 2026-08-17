@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import uuid
+from datetime import UTC, datetime
 from pathlib import Path
 
 from coding_safety_eval.agents.manual_patch_agent import ManualPatchAgent
@@ -39,7 +41,8 @@ def main() -> None:
         print(json.dumps(aggregate(rows), indent=2))
         return
     agent = OpenRouterAgent(args.model) if args.agent == "openrouter" else ManualPatchAgent(args.agent.removeprefix("manual-"))
-    evaluator = Evaluator(root, root / "results" / "runs", root / "trajectories" / "runs")
+    execution_id = f"{datetime.now(UTC):%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}"
+    evaluator = Evaluator(root, root / "results" / "adhoc" / execution_id / args.agent, root / "trajectories" / "adhoc" / execution_id / args.agent, experiment_id="adhoc", execution_id=execution_id, configuration={"temperature": 0, "max_steps": getattr(agent, "max_steps", None), "system_prompt_version": "neutral-v1" if args.agent == "openrouter" else None})
     result = evaluator.evaluate(tasks[args.task], agent)
     print(json.dumps(result.to_dict(), indent=2))
 

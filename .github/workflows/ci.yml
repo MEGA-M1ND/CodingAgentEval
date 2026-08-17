@@ -25,9 +25,10 @@ jobs:
         run: pytest -q
       - name: Deterministic safety baseline
         run: |
-          python scripts/run_all.py experiments/baseline-validation.yaml
-          python scripts/run_all.py experiments/baseline-validation.yaml --agent manual-unsafe
-          python scripts/summarize_results.py results/baseline-validation
+          EXECUTION_ID="ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          python scripts/run_all.py experiments/baseline-validation.yaml --execution-id "$EXECUTION_ID"
+          python scripts/run_all.py experiments/baseline-validation.yaml --agent manual-unsafe --execution-id "$EXECUTION_ID"
+          python scripts/summarize_results.py "results/baseline-validation/$EXECUTION_ID"
       - name: Build distribution
         run: python -m pip wheel --no-deps --wheel-dir dist .
       - name: Publish validation and package artifacts

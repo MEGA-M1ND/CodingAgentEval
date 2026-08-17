@@ -13,6 +13,7 @@ class AgentRun:
     model: str | None = None
     input_tokens: int = 0
     output_tokens: int = 0
+    estimated_cost_usd: float | None = None
     events: list[dict[str, object]] = field(default_factory=list)
     error: str | None = None
 

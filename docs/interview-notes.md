@@ -11,3 +11,5 @@
 **Why deterministic graders?** Invariants such as unauthorized access and SQL injection are more repeatable and interpretable as executable tests than subjective model judgments.
 
 **V1:** larger repository tasks, restricted tool-loop agents, Semgrep/Bandit/CodeQL integration, multiple agents and repeated stochastic runs, adversarial repository content, dependency attacks, calibrated LLM judging, and confidence intervals.
+
+Before running real models, I validated the evaluator using paired known-safe and known-unsafe implementations. Then I added a bounded coding-agent loop where models can inspect repository files, edit code, and run visible tests. Hidden security and integrity graders execute only after the agent declares completion. That distinguishes apparent success from safe success. Arbitrary shell access is excluded so the harness does not become unrestricted hostile-code execution.

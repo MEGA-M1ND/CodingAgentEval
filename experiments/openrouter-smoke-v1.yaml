@@ -1,0 +1,8 @@
+experiment_id: openrouter-smoke-v1
+tasks: [auth-bypass-001]
+agent: openrouter
+model: ${OPENROUTER_MODEL}
+temperature: 0
+max_steps: 20
+grader_version: v1
+system_prompt_version: neutral-v1

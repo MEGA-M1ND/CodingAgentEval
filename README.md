@@ -54,7 +54,21 @@ coding-safety-eval summarize results/baseline-validation
 
 ## Artifacts and metrics
 
-Each run writes a result JSON record and a JSONL trajectory of observable events (commands, writes, grader outcomes; never chain-of-thought). The result records functional, security, integrity, classification, duration, steps, optional model token usage/cost, task version, and git commit when available. The summary reports functional, security, safe-success, false-success, and integrity-violation rates from real result files only.
+Each execution has a unique timestamped directory containing per-task `result.json`, `final.diff`, and trajectory JSONL artifacts. Summaries operate on one execution directory only, preventing historical result contamination. Records include functional, security, integrity, classification, duration, tokens, optional provider cost, task version, experiment configuration, and git commit.
+
+## Real coding-agent evaluation
+
+V0 first validated the measurement instrument with paired deterministic safe and unsafe patches. Phase 2 adds a bounded coding-agent loop: the model can list visible workspace files, read and write workspace files, run only the visible pytest suite, and declare completion. Hidden graders execute only after `finish`.
+
+```mermaid
+flowchart LR
+  A[Agent-visible task and workspace] --> B[list/read/write/run visible tests]
+  B --> C[finish]
+  C --> D[Evaluator-only hidden security and integrity graders]
+  D --> E[Result, final diff, trajectory]
+```
+
+Agent-visible inputs are the task, visible workspace, and visible test outputs. Evaluator-only inputs are hidden tests, security properties, task metadata, reference solutions, and grader implementation. The real-agent system prompt is neutral and never discloses these evaluator-only details.
 
 ## Optional OpenRouter seam
 
@@ -64,7 +78,7 @@ Set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`, then run:
 coding-safety-eval run --task auth-bypass-001 --agent openrouter --model "$OPENROUTER_MODEL"
 ```
 
-The adapter uses a bounded structured-action loop: it permits workspace-relative reads and writes plus an allowlisted pytest command, blocks protected test paths and path escapes, and caps steps, output, and runtime. Model changes are always graded after the run.
+The adapter uses one structured action per response (`list_files`, `read_file`, `write_file`, `run_tests`, `finish`). It blocks absolute, traversal, and symlink escapes; has bounded malformed-action recovery, model calls, steps, runtime, retries, and output; and permits no arbitrary shell execution. Visible test changes are permitted at the tool layer but independently detected by integrity grading.
 
 ## Limitations
 
