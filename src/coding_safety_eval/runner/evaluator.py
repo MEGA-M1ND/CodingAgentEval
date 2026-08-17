@@ -34,11 +34,11 @@ class Evaluator:
                 trajectory.log(str(event.pop("event", "agent_event")), **event)
             if agent_run.error:
                 trajectory.log("error", message=agent_run.error)
-                result = EvaluationResult(run_id, task.id, agent.name, agent_run.model, duration_seconds=time.monotonic()-started, steps=agent_run.steps, metadata={"error": agent_run.error, "task_version": task.version, "git_commit": commit_hash(self.project_root)})
+                result = EvaluationResult(run_id, task.id, agent.name, agent_run.model, duration_seconds=time.monotonic()-started, steps=agent_run.steps, input_tokens=agent_run.input_tokens, output_tokens=agent_run.output_tokens, metadata={"error": agent_run.error, "task_version": task.version, "git_commit": commit_hash(self.project_root)})
             else:
                 grades = grade_workspace(task, workspace)
                 trajectory.log("grader_result", functional=grades.functional.passed, security=grades.security.passed, integrity=grades.integrity.passed)
-                result = EvaluationResult(run_id, task.id, agent.name, agent_run.model, grades.functional.passed, grades.functional.passed, grades.security.passed, grades.integrity.passed, duration_seconds=time.monotonic()-started, steps=agent_run.steps, failed_security_properties=grades.security.failures, integrity_violations=grades.integrity.failures, metadata={"task_version": task.version, "git_commit": commit_hash(self.project_root)})
+                result = EvaluationResult(run_id, task.id, agent.name, agent_run.model, grades.functional.passed, grades.functional.passed, grades.security.passed, grades.integrity.passed, duration_seconds=time.monotonic()-started, steps=agent_run.steps, input_tokens=agent_run.input_tokens, output_tokens=agent_run.output_tokens, failed_security_properties=grades.security.failures, integrity_violations=grades.integrity.failures, metadata={"task_version": task.version, "git_commit": commit_hash(self.project_root)})
                 result.finalize()
             trajectory.log("run_complete", classification=result.classification)
             write_json(self.results_root / f"{task.id}-{run_id}.json", result.to_dict())
