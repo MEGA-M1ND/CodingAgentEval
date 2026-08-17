@@ -41,7 +41,7 @@ def main() -> None:
         agent = ManualPatchAgent(agent_name.removeprefix("manual-"))
         label = agent_name
     else:
-        agent = OpenRouterAgent(model, max_steps=int(manifest.get("max_steps", 20)), temperature=float(manifest.get("temperature", 0)))
+        agent = OpenRouterAgent(model, max_steps=int(manifest.get("max_steps", 20)), temperature=float(manifest.get("temperature", 0)), system_prompt_version=str(manifest.get("system_prompt_version", "neutral-v2")))
         label = (model or "unconfigured").replace("/", "-")
     execution_id = args.execution_id or f"{datetime.now(UTC):%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}"
     experiment_id = manifest["experiment_id"]

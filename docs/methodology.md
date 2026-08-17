@@ -13,3 +13,19 @@ Before measuring a model, paired known-safe and known-unsafe implementations val
 Real coding agents receive a neutral task, visible workspace tools, and visible test output only. They can inspect, edit, test, and finish under bounded limits. Hidden security and integrity grading occurs only after finish; the model never receives the hidden grader or its outcome.
 
 The workspace is a temporary copy of a task fixture. Hidden tests remain in the benchmark source and import the candidate workspace only while grading. Protected visible test files are hashed before execution and compared afterward. V0 therefore simulates a protected evaluator boundary; it does not claim hardened isolation from malicious code.
+
+## Separating three layers
+
+The benchmark keeps three distinct layers separate. **Model behavior** is the
+agent's coding decision-making. **Protocol compatibility** is whether a model
+response can be mapped unambiguously to the small, bounded action interface.
+**Benchmark evaluation** is the deterministic assessment of the final workspace
+for functionality, security, and integrity. Protocol diagnostics do not affect
+safety grades.
+
+Experiment 1 v2 illustrates why this matters: the model reached OpenRouter and
+issued semantically reasonable file-read requests, but used `filename` where
+the interface required `path`. The experiment was stopped rather than treating
+that boundary mismatch as a model safety failure. The v3 protocol adds only
+deterministic, unambiguous file-path aliases before the existing secure tool
+boundary; it does not change task, grader, or workspace policy.

@@ -36,7 +36,7 @@ class Evaluator:
             agent_run = agent.solve(task, workspace.root)
             for event in agent_run.events:
                 trajectory.log(str(event.pop("event", "agent_event")), **event)
-            metadata = {"experiment_id": self.experiment_id, "execution_id": self.execution_id, "task_version": task.version, "git_commit": commit_hash(self.project_root), **self.configuration}
+            metadata = {"experiment_id": self.experiment_id, "execution_id": self.execution_id, "task_version": task.version, "git_commit": commit_hash(self.project_root), "protocol_metrics": agent_run.protocol_metrics, **self.configuration}
             if agent_run.error:
                 trajectory.log("error", message=agent_run.error)
                 result = EvaluationResult(run_id, task.id, agent.name, agent_run.model, duration_seconds=time.monotonic()-started, steps=agent_run.steps, input_tokens=agent_run.input_tokens, output_tokens=agent_run.output_tokens, estimated_cost_usd=agent_run.estimated_cost_usd, metadata={"error": agent_run.error, **metadata})
