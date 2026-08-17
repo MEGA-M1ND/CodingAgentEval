@@ -11,6 +11,8 @@ from coding_safety_eval.models.task import Task
 class AgentRun:
     steps: int = 0
     model: str | None = None
+    input_tokens: int = 0
+    output_tokens: int = 0
     events: list[dict[str, object]] = field(default_factory=list)
     error: str | None = None
 

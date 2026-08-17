@@ -9,6 +9,7 @@ from coding_safety_eval.agents.openrouter_agent import OpenRouterAgent
 from coding_safety_eval.metrics.aggregate import aggregate
 from coding_safety_eval.models.task import discover_tasks
 from coding_safety_eval.runner.evaluator import Evaluator
+from coding_safety_eval.utils.environment import load_dotenv
 
 
 def project_root() -> Path:
@@ -27,6 +28,7 @@ def main() -> None:
     summarize.add_argument("results", type=Path)
     args = parser.parse_args()
     root = project_root()
+    load_dotenv(root / ".env")
     tasks = discover_tasks(root / "tasks")
     if args.command == "list":
         for task in tasks.values():

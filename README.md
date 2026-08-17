@@ -64,7 +64,7 @@ Set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`, then run:
 coding-safety-eval run --task auth-bypass-001 --agent openrouter --model "$OPENROUTER_MODEL"
 ```
 
-V0 records the returned model proposal but deliberately does not apply untrusted free-form diffs. A restricted, tool-using patch loop is a V1 extension; deterministic evaluator quality takes precedence over agent orchestration.
+The adapter uses a bounded structured-action loop: it permits workspace-relative reads and writes plus an allowlisted pytest command, blocks protected test paths and path escapes, and caps steps, output, and runtime. Model changes are always graded after the run.
 
 ## Limitations
 
