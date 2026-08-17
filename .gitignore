@@ -11,3 +11,5 @@ dist/
 *.egg-info/
 results/runs/
 trajectories/runs/
+results/*/*/
+trajectories/*/*/

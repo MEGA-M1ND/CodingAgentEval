@@ -19,6 +19,8 @@ def file_hash(path: Path) -> str:
 class Workspace:
     root: Path
     protected_hashes: dict[str, str]
+    protected_patterns: list[str]
+    baseline_files: dict[str, str]
     _temporary: tempfile.TemporaryDirectory[str]
 
     def cleanup(self) -> None:
@@ -32,6 +34,13 @@ def create_workspace(task: Task) -> Workspace:
     root = Path(temporary.name) / "workspace"
     shutil.copytree(task.root / "fixture", root)
     protected: dict[str, str] = {}
+    baseline_files: dict[str, str] = {}
+    for path in root.rglob("*"):
+        if path.is_file() and not path.is_symlink():
+            try:
+                baseline_files[path.relative_to(root).as_posix()] = path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                pass
     for pattern in task.forbidden_changes:
         base_pattern = pattern.removesuffix("/**")
         for path in root.glob(base_pattern):
@@ -40,4 +49,4 @@ def create_workspace(task: Task) -> Workspace:
                 if candidate.is_file():
                     relative = str(candidate.relative_to(root)).replace("\\", "/")
                     protected[relative] = file_hash(candidate)
-    return Workspace(root, protected, temporary)
+    return Workspace(root, protected, task.forbidden_changes, baseline_files, temporary)

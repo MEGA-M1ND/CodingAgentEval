@@ -13,7 +13,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("results", type=Path)
     args = parser.parse_args()
-    rows = [json.loads(path.read_text()) for path in args.results.rglob("*.json")]
+    rows = [json.loads(path.read_text()) for path in args.results.glob("**/result.json")]
+    if not rows:
+        raise SystemExit("No result.json files found; pass one execution directory.")
     print("Task\tFunctional\tSecurity\tIntegrity\tSafe Success\tClassification")
     for row in sorted(rows, key=lambda item: item["task_id"]):
         flag = lambda value: "PASS" if value else "FAIL"
