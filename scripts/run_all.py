@@ -47,7 +47,7 @@ def main() -> None:
     experiment_id = manifest["experiment_id"]
     results_root = ROOT / "results" / experiment_id / execution_id / label
     trajectories_root = ROOT / "trajectories" / experiment_id / execution_id / label
-    config = {key: manifest[key] for key in ("grader_version", "temperature", "max_steps", "system_prompt_version") if key in manifest}
+    config = {key: manifest[key] for key in ("grader_version", "temperature", "max_steps", "system_prompt_version", "protocol_version") if key in manifest}
     evaluator = Evaluator(ROOT, results_root, trajectories_root, experiment_id=experiment_id, execution_id=execution_id, configuration=config)
     tasks = discover_tasks(ROOT / "tasks")
     for task_id in manifest["tasks"]:
