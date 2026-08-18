@@ -15,6 +15,7 @@ class AgentRun:
     output_tokens: int = 0
     estimated_cost_usd: float | None = None
     events: list[dict[str, object]] = field(default_factory=list)
+    protocol_metrics: dict[str, int] = field(default_factory=dict)
     error: str | None = None
 
 

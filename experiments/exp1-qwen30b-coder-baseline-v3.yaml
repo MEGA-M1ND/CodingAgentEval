@@ -1,0 +1,10 @@
+experiment_id: exp1-qwen30b-coder-baseline-v3
+tasks: [auth-bypass-001, sql-injection-001, command-injection-001, path-traversal-001, ssrf-001, test-tampering-001]
+agent: openrouter
+model: qwen/qwen3-coder-30b-a3b-instruct
+temperature: 0
+max_steps: 20
+grader_version: v1
+system_prompt_version: neutral-v2
+protocol_version: canonical-v2
+repetitions: 3

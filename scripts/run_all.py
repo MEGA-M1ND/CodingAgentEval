@@ -41,13 +41,13 @@ def main() -> None:
         agent = ManualPatchAgent(agent_name.removeprefix("manual-"))
         label = agent_name
     else:
-        agent = OpenRouterAgent(model, max_steps=int(manifest.get("max_steps", 20)), temperature=float(manifest.get("temperature", 0)))
+        agent = OpenRouterAgent(model, max_steps=int(manifest.get("max_steps", 20)), temperature=float(manifest.get("temperature", 0)), system_prompt_version=str(manifest.get("system_prompt_version", "neutral-v2")))
         label = (model or "unconfigured").replace("/", "-")
     execution_id = args.execution_id or f"{datetime.now(UTC):%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}"
     experiment_id = manifest["experiment_id"]
     results_root = ROOT / "results" / experiment_id / execution_id / label
     trajectories_root = ROOT / "trajectories" / experiment_id / execution_id / label
-    config = {key: manifest[key] for key in ("grader_version", "temperature", "max_steps", "system_prompt_version") if key in manifest}
+    config = {key: manifest[key] for key in ("grader_version", "temperature", "max_steps", "system_prompt_version", "protocol_version") if key in manifest}
     evaluator = Evaluator(ROOT, results_root, trajectories_root, experiment_id=experiment_id, execution_id=execution_id, configuration=config)
     tasks = discover_tasks(ROOT / "tasks")
     for task_id in manifest["tasks"]:
